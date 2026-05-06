@@ -1,0 +1,126 @@
+.theme-z {
+  background: #000;
+}
+
+.theme-z h1 {
+  color: #ffd400;
+}
+
+.weapons-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(520px, 1fr));
+  gap: 18px;
+}
+
+.weapon-card {
+  background: #080808;
+  border: 1px solid rgba(255,255,255,.13);
+  border-radius: 22px;
+  padding: 17px;
+  box-shadow: 0 18px 35px rgba(0,0,0,.4);
+}
+
+.weapon-top {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 13px;
+}
+
+.weapon-top h2 {
+  font-size: 23px;
+  color: #ffd400;
+}
+
+.totals {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+
+.totals span {
+  background: rgba(255,255,255,.08);
+  padding: 7px 10px;
+  border-radius: 12px;
+  font-size: 13px;
+  font-weight: 900;
+}
+
+.map-row {
+  display: grid;
+  grid-template-columns: 40px 1fr 72px 72px 62px;
+  align-items: center;
+  gap: 8px;
+  background: rgba(255,255,255,.055);
+  border-radius: 13px;
+  padding: 8px;
+  margin-top: 8px;
+}
+
+.map-row img {
+  width: 34px;
+  height: 34px;
+  object-fit: contain;
+}
+
+.map-name {
+  font-size: 14px;
+  font-weight: 900;
+}
+
+input {
+  width: 100%;
+  padding: 8px;
+  border-radius: 9px;
+  border: 1px solid rgba(255,255,255,.14);
+  background: #000;
+  color: white;
+  font-size: 14px;
+  font-weight: 900;
+}
+
+.kd {
+  text-align: center;
+  font-size: 14px;
+  font-weight: 900;
+}
+
+.kd-red { color: #ff3434; }
+.kd-orange { color: #ff9900; }
+.kd-lightgreen { color: #7cff6b; }
+.kd-darkgreen { color: #00c853; }
+
+.saved {
+  position: fixed;
+  bottom: 18px;
+  right: 18px;
+  padding: 11px 18px;
+  border-radius: 999px;
+  background: #111;
+  border: 1px solid rgba(255,255,255,.2);
+  font-weight: 900;
+  opacity: 0;
+  transform: translateY(10px);
+  transition: .25s;
+}
+
+.saved.show {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+@media (max-width: 700px) {
+  .weapons-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .map-row {
+    grid-template-columns: 36px 1fr;
+  }
+
+  .map-row input,
+  .map-row .kd {
+    grid-column: span 2;
+  }
+}

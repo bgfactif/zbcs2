@@ -1,0 +1,155 @@
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  font-family: Arial, sans-serif;
+  color: white;
+  min-height: 100vh;
+  background: #000;
+}
+
+.navbar {
+  height: 72px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 18px;
+  background: #000;
+  border-bottom: 1px solid rgba(255,255,255,.12);
+  position: sticky;
+  top: 0;
+  z-index: 999;
+  overflow: hidden;
+}
+
+.navbar::after {
+  content: "";
+
+  position: absolute;
+  left: -40%;
+  bottom: 0;
+
+  width: 40%;
+  height: 2px;
+
+  background:
+    linear-gradient(
+      90deg,
+      transparent 0%,
+      rgba(255,255,255,.15) 20%,
+      rgba(255,255,255,.95) 50%,
+      rgba(255,255,255,.15) 80%,
+      transparent 100%
+    );
+
+  filter: blur(.3px);
+
+  animation: navbarLight 3.2s linear infinite;
+}
+
+@keyframes navbarLight {
+  0% {
+    transform: translateX(0);
+    opacity: 0;
+  }
+
+  8% {
+    opacity: 1;
+  }
+
+  92% {
+    opacity: 1;
+  }
+
+  100% {
+    transform: translateX(350%);
+    opacity: 0;
+  }
+}
+
+.menu-link {
+  padding: 13px 36px;
+  border-radius: 999px;
+  text-decoration: none;
+  color: white;
+  background: #0c0c0c;
+  border: 1px solid rgba(255,255,255,.16);
+  font-size: 16px;
+  font-weight: 900;
+  letter-spacing: 1px;
+  transition: .25s;
+}
+
+.menu-link:hover {
+  transform: translateY(-3px) scale(1.04);
+}
+
+.menu-link.yellow:hover,
+.menu-link.yellow.active {
+  color: black;
+  background: #ffd400;
+  box-shadow: 0 0 25px rgba(255, 212, 0, .85);
+}
+
+.menu-link.blue:hover,
+.menu-link.blue.active {
+  color: black;
+  background: #56d9ff;
+  box-shadow: 0 0 25px rgba(86, 217, 255, .85);
+}
+
+main {
+  padding: 24px;
+}
+
+h1 {
+  text-align: center;
+  font-size: 36px;
+  margin-bottom: 22px;
+}
+
+.loading {
+  text-align: center;
+  font-weight: 900;
+  opacity: .7;
+}
+
+.loader-dots {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 10px;
+  margin-top: 80px;
+}
+
+.loader-dots span {
+  width: 14px;
+  height: 14px;
+  background: white;
+  border-radius: 50%;
+  box-shadow: 0 0 18px white;
+  animation: dotBounce 0.8s infinite alternate;
+}
+
+.loader-dots span:nth-child(2) {
+  animation-delay: 0.15s;
+}
+
+.loader-dots span:nth-child(3) {
+  animation-delay: 0.3s;
+}
+
+@keyframes dotBounce {
+  from {
+    transform: translateY(0);
+    opacity: 0.4;
+  }
+
+  to {
+    transform: translateY(-14px);
+    opacity: 1;
+  }
+}

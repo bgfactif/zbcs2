@@ -1,0 +1,10 @@
+@import url("zmam.css");
+
+.theme-b {
+  background: #000;
+}
+
+.theme-b h1,
+.theme-b .weapon-top h2 {
+  color: #56d9ff;
+}
