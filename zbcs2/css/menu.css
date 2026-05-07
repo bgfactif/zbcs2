@@ -70,6 +70,10 @@ body {
   }
 }
 
+.menu-separator {
+  width: 45px;
+}
+
 .menu-link {
   padding: 13px 36px;
   border-radius: 999px;
