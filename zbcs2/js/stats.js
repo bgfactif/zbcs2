@@ -28,15 +28,14 @@ function startStats(team) {
 
   async function init() {
     app.innerHTML = `
-    <div class="loader-dots">
-    <span></span>
-    <span></span>
-    <span></span>
-    </div>
+      <div class="loader-dots">
+        <span></span>
+        <span></span>
+        <span></span>
+      </div>
     `;
 
     await loadFromGoogleSheet();
-
     render();
   }
 
@@ -59,13 +58,33 @@ function startStats(team) {
 
   async function loadFromGoogleSheet() {
     try {
-      const response = await fetch(`${API_URL}?t=${Date.now()}`);
-      const rows = await response.json();
+      const url = (typeof MAM_API_URL !== "undefined" && MAM_API_URL) ? MAM_API_URL : API_URL;
+      const response = await fetch(`${url}&t=${Date.now()}`);
+      const text = await response.text();
+
+      if (!response.ok) {
+        throw new Error(`HTTP ${response.status} - ${text.slice(0, 120)}`);
+      }
+
+      let rows;
+      try {
+        rows = JSON.parse(text);
+      } catch (jsonError) {
+        throw new Error(`Réponse Apps Script pas en JSON. Déploiement/autorisation à vérifier. Début réponse: ${text.slice(0, 120)}`);
+      }
+
+      if (rows && rows.ok === false) {
+        throw new Error(rows.error || "Apps Script a répondu ok:false");
+      }
+
+      if (!Array.isArray(rows)) {
+        throw new Error("Réponse Google Sheet invalide : ce n'est pas une liste de stats.");
+      }
 
       rows.forEach(row => {
-        const rowTeam = String(row.team).trim();
-        const rowWeapon = String(row.weapon).trim();
-        const rowMap = String(row.map).trim();
+        const rowTeam = String(row.team || "").trim();
+        const rowWeapon = String(row.weapon || "").trim();
+        const rowMap = String(row.map || "").trim();
 
         if (
           rowTeam === team &&
@@ -80,27 +99,55 @@ function startStats(team) {
       console.error(error);
 
       app.innerHTML = `
-        <p class="loading">
-          Erreur : Google Sheet ne charge pas.
-        </p>
+        <div class="sheet-error">
+          <h2>Erreur : Google Sheet ne charge pas</h2>
+          <p>${escapeHtml(error.message || String(error))}</p>
+          <button id="retry-load" type="button">Réessayer</button>
+        </div>
       `;
+
+      const retryButton = document.getElementById("retry-load");
+      if (retryButton) {
+        retryButton.addEventListener("click", init);
+      }
+
+      throw error;
     }
   }
 
-  async function saveToGoogleSheet(weapon, map) {
-    const stats = data[weapon][map];
+  async function saveWeaponToGoogleSheet(weapon) {
+    const entries = maps.map(([map]) => ({
+      team: team,
+      weapon: weapon,
+      map: map,
+      kills: Number(data[weapon][map].kills) || 0,
+      deaths: Number(data[weapon][map].deaths) || 0
+    }));
 
-    await fetch(API_URL, {
+    const url = (typeof MAM_API_URL !== "undefined" && MAM_API_URL) ? MAM_API_URL : API_URL;
+    const response = await fetch(url, {
       method: "POST",
       body: JSON.stringify({
-        team: team,
-        weapon: weapon,
-        map: map,
-        kills: Number(stats.kills) || 0,
-        deaths: Number(stats.deaths) || 0
+        mode: "batch",
+        entries: entries
       })
     });
 
+    const text = await response.text();
+    let result;
+
+    try {
+      result = JSON.parse(text);
+    } catch (jsonError) {
+      throw new Error(`Sauvegarde : réponse pas en JSON. Début réponse: ${text.slice(0, 120)}`);
+    }
+
+    if (!response.ok || !result.ok) {
+      throw new Error(result.error || `Sauvegarde impossible HTTP ${response.status}`);
+    }
+
+    await loadFromGoogleSheet();
+    render();
     showSaved();
   }
 
@@ -189,7 +236,7 @@ function startStats(team) {
       </div>
     `;
 
-    activateInputs();
+    activateButtons();
   }
 
   function renderWeapon(weapon) {
@@ -208,6 +255,10 @@ function startStats(team) {
           </div>
         </div>
 
+        <button class="edit-weapon-btn" data-weapon="${weapon}">
+          Ajouter / Modifier
+        </button>
+
         ${sortedMaps.map(([map, logo]) => renderMapRow(weapon, map, logo)).join("")}
       </article>
     `;
@@ -218,30 +269,13 @@ function startStats(team) {
     const ratio = calculateKD(stats.kills, stats.deaths);
 
     return `
-      <div class="map-row">
+      <div class="map-row readonly">
         <img src="${logo}" alt="${map}">
 
         <div class="map-name">${map}</div>
 
-        <input
-          type="number"
-          min="0"
-          placeholder="Kills"
-          value="${stats.kills}"
-          data-weapon="${weapon}"
-          data-map="${map}"
-          data-type="kills"
-        >
-
-        <input
-          type="number"
-          min="0"
-          placeholder="Deaths"
-          value="${stats.deaths}"
-          data-weapon="${weapon}"
-          data-map="${map}"
-          data-type="deaths"
-        >
+        <div class="stat-box">${stats.kills}</div>
+        <div class="stat-box">${stats.deaths}</div>
 
         <div class="kd ${kdClass(ratio)}">
           ${ratio}
@@ -250,21 +284,108 @@ function startStats(team) {
     `;
   }
 
-  function activateInputs() {
-    document.querySelectorAll("input").forEach(input => {
-      input.addEventListener("change", async () => {
-        const weapon = input.dataset.weapon;
-        const map = input.dataset.map;
-        const type = input.dataset.type;
-
-        data[weapon][map][type] = Number(input.value) || 0;
-
-        await saveToGoogleSheet(weapon, map);
-        await loadFromGoogleSheet();
-
-        render();
+  function activateButtons() {
+    document.querySelectorAll(".edit-weapon-btn").forEach(button => {
+      button.addEventListener("click", () => {
+        openWeaponModal(button.dataset.weapon);
       });
     });
+  }
+
+  function openWeaponModal(weapon) {
+    const modal = document.createElement("div");
+    modal.className = "mam-modal";
+
+    modal.innerHTML = `
+      <div class="mam-modal-box">
+        <div class="mam-modal-top">
+          <h2>${weapon}</h2>
+          <button class="modal-close" type="button">×</button>
+        </div>
+
+        <div class="modal-header">
+          <span>Map</span>
+          <span>Kills</span>
+          <span>Deaths</span>
+        </div>
+
+        <div class="modal-maps">
+          ${maps.map(([map, logo]) => `
+            <div class="modal-map-row">
+              <div class="modal-map-name">
+                <img src="${logo}" alt="${map}">
+                <strong>${map}</strong>
+              </div>
+
+              <input
+                type="number"
+                min="0"
+                value="${data[weapon][map].kills}"
+                data-map="${map}"
+                data-type="kills"
+              >
+
+              <input
+                type="number"
+                min="0"
+                value="${data[weapon][map].deaths}"
+                data-map="${map}"
+                data-type="deaths"
+              >
+            </div>
+          `).join("")}
+        </div>
+
+        <div class="modal-actions">
+          <button class="modal-cancel" type="button">Annuler</button>
+          <button class="modal-save" type="button">OK</button>
+        </div>
+      </div>
+    `;
+
+    document.body.appendChild(modal);
+
+    const closeModal = () => modal.remove();
+
+    modal.querySelector(".modal-close").addEventListener("click", closeModal);
+    modal.querySelector(".modal-cancel").addEventListener("click", closeModal);
+
+    modal.addEventListener("click", event => {
+      if (event.target === modal) {
+        closeModal();
+      }
+    });
+
+    modal.querySelector(".modal-save").addEventListener("click", async () => {
+      const saveButton = modal.querySelector(".modal-save");
+      saveButton.disabled = true;
+      saveButton.textContent = "Sauvegarde...";
+
+      modal.querySelectorAll("input").forEach(input => {
+        const map = input.dataset.map;
+        const type = input.dataset.type;
+        data[weapon][map][type] = Number(input.value) || 0;
+      });
+
+      try {
+        await saveWeaponToGoogleSheet(weapon);
+        closeModal();
+      } catch (error) {
+        console.error(error);
+        saveButton.disabled = false;
+        saveButton.textContent = "OK";
+        alert("Erreur : sauvegarde impossible.");
+      }
+    });
+  }
+
+  function escapeHtml(value) {
+    return String(value)
+      .replaceAll("&", "&amp;")
+      .replaceAll("<", "&lt;")
+      .replaceAll(">", "&gt;")
+      .replaceAll('"', "&quot;")
+      .replaceAll("'", "&#039;");
   }
 
   function showSaved() {

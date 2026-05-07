@@ -1,2 +1,6 @@
-const API_URL = "https://script.google.com/macros/s/AKfycbxNsMEdGERPgSk8I6YQs5pKuPWUt0jFyiYWzOdhaVVkRRze11tSeFNPTYIYLczit9DF/exec";
-const MATCH_API_URL = "https://script.google.com/macros/s/AKfycby1nv_GBeI5QLrIw-wighag24fwizjXIa0OHzcCMpBE7zdEl61Qw4Z9nqXfMKNnVQxB/exec";
+const API_URL = "https://script.google.com/macros/s/AKfycbxk9uG51obfJqO2rMHieigzINIn1-BvherlJYFeTVvDOcnJVOn0OJqWGdaMM8LNz7kl/exec";
+
+const MATCH_API_URL = API_URL;
+const ESTIM_API_URL = API_URL;
+
+const MAM_API_URL = API_URL + "?action=mam";
