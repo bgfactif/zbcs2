@@ -1,0 +1,415 @@
+.theme-compare {
+  background: #000;
+}
+
+.theme-compare h1 {
+  color: white;
+}
+
+.compare-container {
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+}
+
+.compare-summary,
+.compare-card,
+.highlight-column,
+.all-weapons-section {
+  background:
+    linear-gradient(135deg, rgba(255,255,255,.075), rgba(255,255,255,.025)),
+    #070707;
+  border: 1px solid rgba(255,255,255,.12);
+  border-radius: 28px;
+  padding: 22px;
+  box-shadow: 0 20px 45px rgba(0,0,0,.45);
+}
+
+.compare-summary {
+  display: grid;
+  grid-template-columns: 1.1fr 1.5fr;
+  gap: 18px;
+  align-items: center;
+  overflow: hidden;
+  position: relative;
+}
+
+.compare-summary::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background:
+    radial-gradient(circle at left top, rgba(255, 212, 0, .16), transparent 34%),
+    radial-gradient(circle at right top, rgba(86, 217, 255, .16), transparent 34%);
+  pointer-events: none;
+}
+
+.compare-summary > * {
+  position: relative;
+  z-index: 2;
+}
+
+.eyebrow {
+  font-size: 13px;
+  text-transform: uppercase;
+  letter-spacing: 2px;
+  opacity: .55;
+  font-weight: 900;
+  margin-bottom: 6px;
+}
+
+.compare-summary h2,
+.compare-card h2,
+.highlight-column h2,
+.section-title-line h2 {
+  font-size: 30px;
+}
+
+.summary-text,
+.highlight-head p {
+  margin-top: 8px;
+  opacity: .68;
+  font-weight: 800;
+  line-height: 1.45;
+}
+
+.summary-stats {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 12px;
+}
+
+.summary-box {
+  background: rgba(0,0,0,.5);
+  border: 1px solid rgba(255,255,255,.1);
+  border-radius: 18px;
+  padding: 16px;
+  text-align: center;
+}
+
+.summary-box span {
+  display: block;
+  font-size: 32px;
+  font-weight: 900;
+}
+
+.summary-box small {
+  opacity: .65;
+  font-weight: 900;
+}
+
+.yellow-box span { color: #ffd400; }
+.blue-box span { color: #56d9ff; }
+.danger-box span { color: #ff3434; }
+
+.highlight-board {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 18px;
+}
+
+.highlight-column {
+  position: relative;
+  overflow: hidden;
+}
+
+.highlight-column::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  opacity: .18;
+  pointer-events: none;
+}
+
+.highlight-column.yellow::before {
+  background: radial-gradient(circle at top left, #ffd400, transparent 44%);
+}
+
+.highlight-column.blue::before {
+  background: radial-gradient(circle at top right, #56d9ff, transparent 44%);
+}
+
+.highlight-head,
+.highlight-list {
+  position: relative;
+  z-index: 2;
+}
+
+.highlight-list {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  margin-top: 18px;
+}
+
+.highlight-item {
+  display: grid;
+  grid-template-columns: 48px 44px 1fr auto;
+  align-items: center;
+  gap: 12px;
+  padding: 12px;
+  border-radius: 18px;
+  background: rgba(0,0,0,.5);
+  border: 1px solid rgba(255,255,255,.1);
+  transition: .2s;
+}
+
+.highlight-item:hover {
+  transform: translateY(-3px);
+  border-color: rgba(255,255,255,.24);
+}
+
+.rank-badge {
+  width: 42px;
+  height: 42px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 14px;
+  background: rgba(255,255,255,.1);
+  font-weight: 900;
+}
+
+.highlight-item img {
+  width: 40px;
+  height: 40px;
+  object-fit: contain;
+  filter: drop-shadow(0 0 10px black);
+}
+
+.highlight-info strong,
+.highlight-info span,
+.highlight-gap small {
+  display: block;
+}
+
+.highlight-info strong {
+  font-size: 18px;
+  font-weight: 900;
+}
+
+.highlight-info span {
+  margin-top: 3px;
+  opacity: .7;
+  font-size: 13px;
+  font-weight: 900;
+}
+
+.highlight-gap {
+  min-width: 86px;
+  text-align: right;
+  font-size: 24px;
+  font-weight: 900;
+}
+
+.highlight-gap small {
+  margin-top: 2px;
+  opacity: .62;
+  font-size: 11px;
+  line-height: 1.1;
+}
+
+.empty-highlight {
+  padding: 18px;
+  border-radius: 18px;
+  background: rgba(0,0,0,.38);
+  border: 1px dashed rgba(255,255,255,.18);
+  opacity: .7;
+  font-weight: 900;
+}
+
+.all-weapons-section {
+  padding: 18px;
+}
+
+.section-title-line {
+  margin-bottom: 16px;
+}
+
+.compare-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(430px, 1fr));
+  gap: 18px;
+}
+
+.compare-card {
+  position: relative;
+  overflow: hidden;
+}
+
+.compare-card::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  opacity: .14;
+}
+
+.compare-card.zeko-win::before {
+  background: radial-gradient(circle at top left, #ffd400, transparent 45%);
+}
+
+.compare-card.belek-win::before {
+  background: radial-gradient(circle at top right, #56d9ff, transparent 45%);
+}
+
+.compare-card.draw::before {
+  background: radial-gradient(circle at top, white, transparent 40%);
+}
+
+.compare-card-top,
+.best-duel,
+.compare-result {
+  position: relative;
+  z-index: 2;
+}
+
+.compare-card-top {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 14px;
+  margin-bottom: 16px;
+}
+
+.gap-pill {
+  padding: 10px 14px;
+  border-radius: 999px;
+  background: rgba(255,255,255,.1);
+  border: 1px solid rgba(255,255,255,.12);
+  font-weight: 900;
+  white-space: nowrap;
+}
+
+.best-duel {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px;
+}
+
+.best-side {
+  background: rgba(0,0,0,.42);
+  border: 1px solid rgba(255,255,255,.1);
+  border-radius: 20px;
+  padding: 14px;
+}
+
+.best-side.yellow {
+  border-color: rgba(255, 212, 0, .28);
+}
+
+.best-side.blue {
+  border-color: rgba(86, 217, 255, .28);
+}
+
+.best-map-line {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 12px;
+}
+
+.best-map-line img {
+  width: 42px;
+  height: 42px;
+  object-fit: contain;
+  filter: drop-shadow(0 0 10px black);
+}
+
+.best-map-line strong,
+.best-map-line span {
+  display: block;
+}
+
+.best-map-line strong {
+  font-size: 18px;
+  font-weight: 900;
+}
+
+.best-map-line span {
+  opacity: .72;
+  font-weight: 900;
+}
+
+.best-numbers {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+
+.best-numbers span {
+  background: rgba(255,255,255,.08);
+  padding: 8px 10px;
+  border-radius: 12px;
+  font-size: 13px;
+  font-weight: 900;
+}
+
+.total-line {
+  margin-top: 12px;
+  padding-top: 12px;
+  border-top: 1px solid rgba(255,255,255,.09);
+  opacity: .8;
+  font-size: 13px;
+  font-weight: 900;
+}
+
+.compare-result {
+  margin-top: 14px;
+  padding: 13px 15px;
+  border-radius: 16px;
+  background: rgba(255,255,255,.08);
+  font-size: 16px;
+  font-weight: 900;
+  text-align: center;
+}
+
+.kd-red { color: #ff3434; }
+.kd-orange { color: #ff9900; }
+.kd-lightgreen { color: #7cff6b; }
+.kd-darkgreen { color: #00c853; }
+
+.compare-error {
+  max-width: 760px;
+  margin: 70px auto;
+}
+
+@media (max-width: 950px) {
+  .compare-summary,
+  .highlight-board,
+  .best-duel {
+    grid-template-columns: 1fr;
+  }
+
+  .summary-stats {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+@media (max-width: 560px) {
+  .compare-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .compare-card-top {
+    align-items: flex-start;
+    flex-direction: column;
+  }
+
+  .summary-stats {
+    grid-template-columns: 1fr;
+  }
+
+  .highlight-item {
+    grid-template-columns: 42px 1fr;
+  }
+
+  .highlight-item img {
+    display: none;
+  }
+
+  .highlight-gap {
+    grid-column: span 2;
+    text-align: left;
+  }
+}
